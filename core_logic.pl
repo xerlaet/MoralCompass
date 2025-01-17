@@ -1,6 +1,8 @@
 :- use_module(library(scasp)).
+:- use_module(library(lists)).
 :- style_check(-singleton).
 :- consult('data.pl').
+:- include('data.pl').
 
 % Accepted
 action(helped_someone, 10).
@@ -30,12 +32,23 @@ action(rejected_adopted_a_pet, -10).
 action(rejected_went_to_work, -5).
 action(rejected_saved_the_world, -200000).
 
+% assume law abiding by default unless proven otherwise
+law_abiding :- \+ violated_law.
+violated_law :-
+    actions(Actions),
+    (member([stole, _], Actions);
+    member([harmed_someone, _], Actions)).
+
+check_law_abiding :-
+    violated_law.
+check_law_abiding.
+
 find_morality(Total) :-
     collect(action(Actions),AllActs),
     calc_scores(AllActs,Total),
-    write(Total),nl.
-
-% Define a simple rule
+    write(Total),
+    check_law_abiding,
+    (law_abiding -> write(', you are law abiding'),nl; write(', you are not law abiding'),nl).
 
 collect(Act,AllActs) :-
     collect_all(Act,AllActs,[]).
@@ -64,8 +77,8 @@ weighted_morality(Action, Number, Total) :-
     action(Action, Value),
     Total is Value * Number.
 
-% Example actions
-action(helped_someone, 10).
-action(stole, -20).
-action(rejected_stole, 5).
-action(rejected_helped_someone,-5).
+% % Example actions
+% action(helped_someone, 10).
+% action(stole, -20).
+% action(rejected_stole, 5).
+% action(rejected_helped_someone,-5).

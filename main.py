@@ -46,7 +46,7 @@ entitylist.add(npc7)
 # Text and Menus
 moral_msg = Text([screen_width/2,screen_height/2-100],"Congratulations, you are a moral utilitarian!",'freesansbold.ttf',50,(0,0,0))
 immoral_msg = Text([screen_width/2,screen_height/2-100],"Unfortunately, you are an immoral utilitarian",'freesansbold.ttf',50,(255,255,255))
-header = Text([screen_width/2,50],"Morality Meter: 0",'freesansbold.ttf',50,(255,255,255))
+header = Text([screen_width/2,50],"Morality Meter: 0, you are law abiding",'freesansbold.ttf',50,(255,255,255))
 
 # Main game loop
 running = True
@@ -60,7 +60,7 @@ while running:
         endScreen = True
 
     if endScreen:
-        if int(morality) >= 0:
+        if int(morality.split(",")[0]) >= 0:
             header.color = (0,0,0)
             header.center = [screen_width/2,screen_height/2]
             header.update("Your overall morality is: " + morality)
@@ -68,7 +68,7 @@ while running:
             header.color = (255,255,255)
             header.center = [screen_width/2,screen_height/2]
             header.update("Your overall morality is: " + morality)
-        if int(morality) >= 0:
+        if int(morality.split(",")[0]) >= 0:
             moralend.draw(screen)
             moral_msg.blit(screen)
         else:
